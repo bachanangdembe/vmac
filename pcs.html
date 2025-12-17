@@ -145,7 +145,8 @@
     </div>
   </header><!-- End Header -->
 
-<table style="border: 1px solid black; position: relative; top: 100px;"><tr>
+<table style="border: 1px solid black; position: relative; top: 100px;">
+<tr>
 <td style="border: 1px solid black;"><div class="container" data-aos="fade-up">  
     <div class="product">
       <img src="assets/img/optiplex-3000tc-gallery-3.avif" width="80px">
@@ -202,19 +203,17 @@
         <button onclick="addToCart('Dell Pro Max Micro Desktop', 1100)">Add to Cart</button>
     </div>
   </div>
-</td></tr>
-<td style="vertical-align: top;">
-  <div class="container" data-aos="fade-up">
-      <div class="products"><button onclick="openModal()" style="background:#f44336;">Place Order</button>
-      <tr><div class="cart"><h6>Your Cart</h6></div></tr>
-      <tr><div <p id="total-price">Total: $0</p></div></tr>
-      <tr><div id="cart-items"></div></tr>
-      </div>
-    </div>
 </td>
+
+  <div class="container" data-aos="fade-up">
+    <td style="vertical-align: top;">
+      <button onclick="openModal()" style="background:#f44336;">Place Order</button></td>
+      <tr><td><div class="cart"><h6>Your Cart</h6></div></td></tr>
+      <tr><td><div <p id="total-price">Total: $0</p></div></td></tr>
+      <tr><td><div id="cart-items"></div></td></tr>
+  </div>
 </table>
-
-
+  
 <!------------------------------->
 <!-- Modal -->
 <div class="modal" id="orderModal">
@@ -560,6 +559,7 @@
   <script src="assets/js/main.js"></script>
 </body>
 </html>
+
 
 
 
