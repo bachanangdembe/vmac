@@ -145,16 +145,25 @@
     </div>
   </header><!-- End Header -->
 
-  
-function displayCart() {
+     function displayCart() {
         const cartItems = document.getElementById('cart-items');
         const totalPriceEl = document.getElementById('total-price');
         cartItems.innerHTML = '';
         let total = 0;
 
-        totalPriceEl.innerText = `Total: $${total}`;
-   }
+        cart.forEach((item, index) => {
+            total += item.price;
+            cartItems.innerHTML += `
+                <div class="cart-item">
+                    <p>${item.name} - $${item.price}</p>
+                    <button onclick="removeFromCart(${index})">Remove</button>
+                </div>
+            `;
+        });
 
+        totalPriceEl.innerText = `Total: $${total}`;
+
+    }
 
 <!--------------------------------------------------------------------------->
   
@@ -566,6 +575,7 @@ function displayCart() {
   <script src="assets/js/main.js"></script>
 </body>
 </html>
+
 
 
 
