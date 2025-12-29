@@ -53,6 +53,7 @@
         top: 300px;
         justify-content: center;
         margin: 0px;
+        font-size: 20px;
     }
     .product, .cart-item1 {
         background: white;
@@ -75,11 +76,11 @@
     } 
     .cart-item {
         background: white;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        padding: 10px;
+        /*border: 1px solid #ddd;
+        /*border-radius: 10px;
+        padding: 10px;*/
         margin: 10px;
-        width: 200px;
+        
         text-align: center;
     }
 
@@ -112,33 +113,57 @@
     #panel, .flip {
         
         margin: 0px;
-        width: 200px;
+        width: 250px;
         padding: 0px;
         text-align: center;
-        cursor: pointer;  
+        cursor: pointer;
+
     }
 
     #panel {
-        display: none;
+        background: white;
         cursor: auto;
         border: 2px solid #ddd;
+        display: none;
+        margin-top: 100px;
+        position: absolute;
+       z-index: 9;
+
+
+    }
+
+    .cartpos {
+      position: fixed;
+      top: 60px;
+      left: -350px; /* hidden */
+      width: 300px;
+      height: 80%;
+      background: #fff;
+      border-left: 2px solid #ddd;
+      padding: 15px;
+      box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+      transition: right 0.3s ease;
+      z-index: 3;
+      display: flex;
+      align-items: center;
     }
 
 
-    .floating-form {
-    position: fixed;
-    left: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #ffffff;
-    padding: 15px;
-    width: 220px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    border-radius: 8px;
-    z-index: 999;
-    text-align: center;
-    border: 1px solid #ddd;
+    .sticky-form {
+      position: fixed;
+      top: 50%;
+      right: 20px;              /* RIGHT SIDE */
+      transform: translateY(-50%);
+      width: 200px;
+      background: #ffffff;
+      padding: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      border-radius: 8px;
+      z-index: 1000;
+      text-align: center;
+      height: 210px;
     }
+
 
 
 
@@ -198,24 +223,22 @@
   </header><!-- End Header -->
 
 
-     <div class="floating-form" ><h3>Shopping Amount</h3><div><p id="total-price">Total: $0</p></div><button onclick="openModal()" style="background:#f44336;">Place Order</button>
-      <button onclick="myFunction()">View Cart</button>
+     <div class="sticky-form" ><h6 style="font-weight:bold;">Shopping Amount</h6><div><p id="total-price" style="font-size: 15px; font-weight:bold;">Total: $0</p></div><button onclick="myFunction()" style="font-size: 11px;">🛒View Cart</button>
       </div>     
       
 <!---------------------------Cart Container--------------------------------->
 
       <div id="panel">
-      <table style="border: 2px solid #ddd; background: gray; width: 200px; position: absolute; margin-left: 5%%; margin-top:5%">
-        <thead ><td><h3 align="justify-content-center">Your Cart</h3></td></thead><tr>
-        <td>
+        <h5 align="justify-content-center">🛒Your Cart</h5>
         
-                <div id="cart-items">
-        </div>
-        </td>
-        </tr>
-      </table></div>
-<!----------------------------Cart Container Closed------------------------------->
+        <ul id="cart-items">
 
+        </ul>
+
+        <button onclick="openModal()" style="background:#f44336; font-size: 11px;">Place Order</button>
+      </div>
+<!----------------------------Cart Container Closed------------------------------->
+      
 
 
 <div class="products" data-aos="fade-up" style="margin-top: 5%;">  
@@ -279,9 +302,9 @@
   </div>
 
 
-      <div id="panel" style="position: absolute; margin-left: 5%%; margin-top:0px;">
+     <!-- <div id="panel">
       <div id="cart-items"></div>
-      </div>
+      </div>----------------------------->
 
 
 
@@ -292,7 +315,6 @@
       <!--<div><p id="total-price">Total: $0</p></div>-->
       
   
-
 
 
 <!------------------------------->
@@ -358,10 +380,7 @@
         cart.forEach((item, index) => {
             total += item.price;
             cartItems.innerHTML += `
-                <div class="cart-item">
-                    <p>${item.name} - $${item.price}</p>
-                    <button onclick="removeFromCart(${index})">Remove</button>
-                </div>
+                <table><td><div class="cart-item"><p>${item.name} - $${item.price}</p></td><td><button onclick="removeFromCart(${index})">Remove</button></td></div>         
             `;
         });
 
