@@ -50,10 +50,12 @@
     .products, .cart {
         display: flex;
         flex-wrap: wrap;
-        top: 300px;
+        top: 100px;
         justify-content: center;
         margin: 0px;
         font-size: 20px;
+        margin-top: 10%;
+
     }
     .product, .cart-item1 {
         background: white;
@@ -63,6 +65,8 @@
         margin: 10px;
         width: 200px;
         text-align: center;
+        font-size: 12px;
+
     }
     .odr {
         background: lightsteelblue;
@@ -96,6 +100,7 @@
     button:hover {
         background-color: #45a049;
     }
+
     .cart h2 {
         width: 100%;
         text-align: center;
@@ -113,7 +118,7 @@
     #panel, .flip {
         
         margin: 0px;
-        width: 250px;
+        width: 300px;
         padding: 0px;
         text-align: center;
         cursor: pointer;
@@ -126,42 +131,59 @@
         border: 2px solid #ddd;
         display: none;
         margin-top: 100px;
-        position: absolute;
+        position:absolute;
        z-index: 9;
+       font-size: 12px;
+
 
 
     }
-
-    .cartpos {
+    .branding {
+      margin-top: -4%;
+      background: #4CAF50;
       position: fixed;
-      top: 60px;
-      left: -350px; /* hidden */
-      width: 300px;
-      height: 80%;
-      background: #fff;
-      border-left: 2px solid #ddd;
-      padding: 15px;
-      box-shadow: -5px 0 15px rgba(0,0,0,0.2);
-      transition: right 0.3s ease;
-      z-index: 3;
-      display: flex;
+      z-index: 99;
+      left: 25%;
+
+    }
+
+    th:hover {
+      background: darkgray;
+      cursor: pointer;
+    }
+    th {
+       width: 100px;
+       border: 2px solid #ffffff;
+       height: 40px;
+       text-align: center;
+       color: white;
+       font-size: 5;
+
+    }
+    a{
+      color: yellow;
+    }
+
+    .formlyt {
+      font-size: 12px;
       align-items: center;
     }
 
 
     .sticky-form {
       position: fixed;
-      top: 50%;
+      top: 17.2%;
       right: 20px;              /* RIGHT SIDE */
       transform: translateY(-50%);
-      width: 200px;
-      background: #ffffff;
-      padding: 20px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
-      border-radius: 8px;
+   
+
+
+  
+
       z-index: 1000;
       text-align: center;
-      height: 210px;
+
+      font-size: 12px;
     }
 
 
@@ -220,28 +242,71 @@
       </div>
 
     </div>
+   
+
   </header><!-- End Header -->
 
 
-     <div class="sticky-form" ><h6 style="font-weight:bold;">Shopping Amount</h6><div><p id="total-price" style="font-size: 15px; font-weight:bold;">Total: $0</p></div><button onclick="myFunction()" style="font-size: 11px;">🛒View Cart</button>
+
+<!-----------------------------------------test---------------------------->
+
+
+
+
+
+
+
+
+
+<!---------------------------------------------------------------------------->
+
+
+
+
+
+<div class="branding">
+<nav id="navbar" class="navbar">
+    <ul>
+      <li><a href="acer.html"> ACER</a></li>
+      <li><a href="acer.html">ACER</a></li>
+      <li><a href="amd.html">AMD</a></li>
+      <li><a href="apple.html">APPLE</a></li>
+      <li><a href="asus.html">ASUS</a></li>
+      <li><a href="dell.html">DELL</a></li>
+      <li><a href="hp.html">HP</a></li>
+      <li><a href="lenovo.html">LENOVO</a></li>
+      <li><a href="msi.html">MSI</a></li>
+      <li><a href="samsung.html">SAMSUNG <li> </li></a></li>
+    </ul>
+  </nav>
+</div>
+
+
+     <div class="sticky-form" ><button onclick="myFunction()">🛒View Cart</button>
       </div>     
       
 <!---------------------------Cart Container--------------------------------->
 
       <div id="panel">
         <h5 align="justify-content-center">🛒Your Cart</h5>
+        <p id="total-price" style="font-size: 15px; font-weight:bold;">Total: $0</p>
         
         <ul id="cart-items">
 
         </ul>
-
-        <button onclick="openModal()" style="background:#f44336; font-size: 11px;">Place Order</button>
+        <hr style="size: 2px;">
+        <button onclick="openModal()" style="background:#f44336;">Place Order</button>
       </div>
 <!----------------------------Cart Container Closed------------------------------->
       
+<!----------------------------Product Brand-------------------------------->
 
 
-<div class="products" data-aos="fade-up" style="margin-top: 5%;">  
+
+
+
+<!--------------------------------Products List----------------------------------->
+<div class="products" data-aos="fade-up">  
 
 
     <div class="product">
@@ -324,7 +389,7 @@
  <!-------------------------------->
 
 
-<form id="orderForm">
+<form id="orderForm" class="formlyt">
     <h3>Place Your Order</h3>
     <input type="text" id="name" placeholder="Your Name" required><br>
     <input type="email" id="email" placeholder="Your Email" required><br>
