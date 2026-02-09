@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Live GPS Location (1 sec update)</title>
+  <style>
+    #map {
+      height: 90vh;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h2>📍 Live Location (Updates every 1 second)</h2>
+  <div id="map"></div>
+
+  <script>
+    let map, marker;
+
+    function initMap() {
+      const defaultPos = { lat: 27.7172, lng: 85.3240 }; // Kathmandu default
+      map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 17,
+        center: defaultPos,
+      });
+
+      marker = new google.maps.Marker({
+        position: defaultPos,
+        map: map,
+        title: "Your Location",
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 8,
+          fillColor: "#4285F4",
+          fillOpacity: 1,
+          strokeWeight: 2,
+          strokeColor: "#ffffff",
+        },
+      });
+
+      startTracking();
+    }
+
+    function startTracking() {
+      if (!navigator.geolocation) {
+        alert("Geolocation not supported");
+        return;
+      }
+
+      setInterval(() => {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const lat = pos.coords.latitude;
+            const lng = pos.coords.longitude;
+
+            const newPos = { lat, lng };
+            marker.setPosition(newPos);
+            map.setCenter(newPos);
+          },
+          (err) => {
+            console.log("Location error", err);
+          },
+          {
+            enableHighAccuracy: true,
+            maximumAge: 0,
+            timeout: 5000
+          }
+        );
+      }, 1000); // 1 second update
+    }
+  </script>
+
+  <!-- Replace YOUR_API_KEY -->
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+  </script>
+</body>
+</html>

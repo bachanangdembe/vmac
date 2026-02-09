@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>User Details + GPS</title>
+  <style>
+    body { font-family: Arial; background:#0f172a; color:#e5e7eb; padding:20px; }
+    .box { max-width: 600px; background:#020617; padding:20px; border-radius:10px; }
+    input, button { padding:10px; margin:6px 0; }
+    button { background:#22c55e; border:none; cursor:pointer; }
+    table { width:100%; border-collapse: collapse; margin-top:15px; font-size:13px; }
+    th, td { border:1px solid #334155; padding:6px; text-align:left; }
+    th { background:#1e293b; }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>User Details + GPS</h2>
+
+  <input id="name" placeholder="Full Name"><br>
+  <input id="email" placeholder="Email"><br>
+  <input id="phone" placeholder="Phone"><br>
+
+  <label>
+    <input type="checkbox" id="locCheck" onclick="getLocation()"> Accept GPS Location
+  </label>
+  <div id="location"></div>
+
+  <button onclick="saveData()">💾 Save</button>
+  <button onclick="viewData()">👁️ View Saved Data</button>
+
+  <div id="result"></div>
+</div>
+
+<script>
+let currentLocation = null;
+
+function getLocation() {
+  if (!document.getElementById("locCheck").checked) return;
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      currentLocation = {
+        latitude: pos.coords.latitude,
+        longitude: pos.coords.longitude
+      };
+      document.getElementById("location").innerText =
+        `Lat: ${currentLocation.latitude}, Lng: ${currentLocation.longitude}`;
+    },
+    () => alert("Location permission denied")
+  );
+}
+
+async function saveData() {
+  if (!currentLocation) {
+    alert("Please allow GPS location first");
+    return;
+  }
+
+  const data = {
+    name: document.getElementById("name").value,
+    email: document.getElementById("email").value,
+    phone: document.getElementById("phone").value,
+    latitude: currentLocation.latitude,
+    longitude: currentLocation.longitude,
+    timestamp: new Date().toISOString()
+  };
+
+  await fetch("http://localhost:8000/save", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+
+  alert("Saved successfully");
+}
+
+async function viewData() {
+  const res = await fetch("http://localhost:8000/users");
+  const users = await res.json();
+
+  let html = `
+    <h3>Saved Users</h3>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
+        <th>Time</th>
+      </tr>
+  `;
+
+  users.forEach(u => {
+    html += `
+      <tr>
+        <td>${u.name}</td>
+        <td>${u.email}</td>
+        <td>${u.phone}</td>
+        <td>${u.latitude}</td>
+        <td>${u.longitude}</td>
+        <td>${new Date(u.timestamp).toLocaleString()}</td>
+      </tr>
+    `;
+  });
+
+  html += `</table>`;
+  document.getElementById("result").innerHTML = html;
+}
+</script>
+
+</body>
+</html>
