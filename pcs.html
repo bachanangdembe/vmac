@@ -122,7 +122,7 @@
         background: white;
         border: 2px solid #ddd;
         display: none;
-        width: 280px;
+        width: 300px;
         padding: 15px;
         position: fixed;
         top: 70px;
@@ -184,8 +184,8 @@
     </div>
     <hr>
     <p id="total-price" style="font-size: 14px; font-weight:bold;">Total: $0</p>
-    <ul id="cart-items" style="list-style: none; padding: 0; max-height: 150px; overflow-y: auto; font-size: 13px;"></ul>
-    <button onclick="openModal()" style="background:#25D366; width:100%;">Place Order via WhatsApp</button>
+    <ul id="cart-items" style="list-style: none; padding: 0; max-height: 180px; overflow-y: auto; font-size: 13px;"></ul>
+    <button onclick="openModal()" style="background:#25D366; width:100%; margin-top: 10px;">Place Order via WhatsApp</button>
   </div>
 
   <!-- Main Layout with Sidebar and Products -->
@@ -308,16 +308,30 @@
     window.onload = function() {
         let storedCart = localStorage.getItem('vmac_cart');
         if (storedCart) {
-            cart = JSON.parse(storedCart);
+            let parsedCart = JSON.parse(storedCart);
+            // Handle external additions if coming from product details with quantity checking
+            parsedCart.forEach(item => {
+                let existingItem = cart.find(cartItem => cartItem.name === item.name);
+                if (existingItem) {
+                    existingItem.quantity += (item.quantity || 1);
+                } else {
+                    cart.push({name: item.name, price: item.price, quantity: item.quantity || 1});
+                }
+            });
             localStorage.removeItem('vmac_cart');
             updateCartUI();
         }
     };
 
     function addToCart(name, price) {
-        cart.push({name, price});
+        let existingItem = cart.find(item => item.name === name);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({name: name, price: price, quantity: 1});
+        }
         updateCartUI();
-        alert(name + " has been added to your cart!");
+        // Alert removed as requested
     }
 
     function removeFromCart(index) {
@@ -332,15 +346,20 @@
         
         cartItemsEl.innerHTML = '';
         let total = 0;
-        cartCountEl.innerText = cart.length;
+        let totalCount = 0;
 
         cart.forEach((item, index) => {
-            total += item.price;
+            let itemTotal = item.price * item.quantity;
+            total += itemTotal;
+            totalCount += item.quantity;
+
             cartItemsEl.innerHTML += `<li class="d-flex justify-content-between align-items-center mb-2">
-                <span>${item.name} ($${item.price})</span>
+                <span>${item.name} (x${item.quantity}) - $${itemTotal}</span>
                 <button onclick="removeFromCart(${index})" style="padding:2px 5px; font-size:10px; background:#ff4d4d; margin:0;">X</button>
             </li>`;
         });
+        
+        cartCountEl.innerText = totalCount;
         totalPriceEl.innerText = `Total: $${total}`;
     }
 
@@ -371,8 +390,8 @@
             return;
         }
 
-        let itemsText = cart.map(item => `• ${item.name} ($${item.price})`).join("%0A");
-        let total = cart.reduce((sum, item) => sum + item.price, 0);
+        let itemsText = cart.map(item => `• ${item.name} (Qty: ${item.quantity}) - $${item.price * item.quantity}`).join("%0A");
+        let total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
         let whatsappMessage = `*New Order Placed*%0A%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Address:* ${address}%0A%0A*Order Items:*%0A${itemsText}%0A%0A*Total:* $${total}`;
         
