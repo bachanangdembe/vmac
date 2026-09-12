@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Product Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 font-sans flex h-screen overflow-hidden">
+
+    <!-- SIDEBAR: BRANDS LIST -->
+    <aside class="w-72 bg-gray-900 text-white flex flex-col h-full shadow-lg">
+        <!-- Sidebar Header -->
+        <div class="p-5 border-b border-gray-800 flex items-center space-x-3">
+            <i class="fa-solid fa-layer-group text-indigo-500 text-2xl"></i>
+            <span class="text-xl font-bold tracking-wide">BrandDash</span>
+        </div>
+
+        <!-- Search Brands -->
+        <div class="p-4">
+            <div class="relative">
+                <input type="text" id="searchBrand" oninput="filterBrands()" placeholder="Search brands..." 
+                    class="w-full bg-gray-800 text-sm text-gray-200 rounded-lg pl-9 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-gray-400 text-xs"></i>
+            </div>
+        </div>
+
+        <!-- Brands List -->
+        <div class="flex-1 overflow-y-auto px-3 py-2 space-y-1" id="brandsContainer">
+            <!-- Dynamic Brand Items Inserted Here -->
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div class="p-4 border-t border-gray-800 text-xs text-gray-500 text-center">
+            Global Brands Management v1.0
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden">
+
+        <!-- Top Header Bar -->
+        <header class="bg-white border-b border-gray-200 px-8 py-4 flex justify-between items-center shadow-sm">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800" id="currentBrandName">Apple</h1>
+                <p class="text-xs text-gray-500">Manage products associated with this brand</p>
+            </div>
+            
+            <button onclick="openModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-lg text-sm transition flex items-center space-x-2 shadow">
+                <i class="fa-solid fa-plus"></i>
+                <span>Add Product</span>
+            </button>
+        </header>
+
+        <!-- Product View Area -->
+        <section class="flex-1 overflow-y-auto p-8 bg-gray-50">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="productsGrid">
+                <!-- Dynamic Products Inserted Here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden flex flex-col items-center justify-center h-64 text-center">
+                <i class="fa-solid fa-box-open text-5xl text-gray-300 mb-3"></i>
+                <h3 class="text-lg font-medium text-gray-600">No products found</h3>
+                <p class="text-xs text-gray-400 max-w-sm mt-1">There are currently no products listed under this brand. Click "Add Product" to add one.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- ADD PRODUCT MODAL -->
+    <div id="productModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden transform transition-all">
+            
+            <div class="flex justify-between items-center px-6 py-4 bg-gray-50 border-b border-gray-100">
+                <h3 class="font-bold text-gray-800">Add New Product</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <form id="productForm" onsubmit="handleAddProduct(event)" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Target Brand</label>
+                    <input type="text" id="modalBrandDisplay" disabled class="w-full bg-gray-100 text-gray-600 text-sm rounded-lg px-3 py-2 border border-gray-200">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Product Name</label>
+                    <input type="text" id="prodName" required placeholder="e.g. iPhone 15 Pro" class="w-full text-sm rounded-lg px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Price ($USD)</label>
+                    <input type="number" step="0.01" id="prodPrice" required placeholder="e.g. 999.99" class="w-full text-sm rounded-lg px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Category</label>
+                    <input type="text" id="prodCategory" required placeholder="e.g. Electronics, Apparel" class="w-full text-sm rounded-lg px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Image URL</label>
+                    <input type="url" id="prodImage" required placeholder="https://images.unsplash.com/..." class="w-full text-sm rounded-lg px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+
+                <div class="pt-4 flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-sm bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 shadow">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Initial Data Structure for Brands & Products
+        let brands = [
+            { id: 'apple', name: 'Apple', logo: 'fa-apple' },
+            { id: 'nike', name: 'Nike', logo: 'fa-italic' },
+            { id: 'samsung', name: 'Samsung', logo: 'fa-mobile-screen' },
+            { id: 'sony', name: 'Sony', logo: 'fa-gamepad' },
+            { id: 'adidas', name: 'Adidas', logo: 'fa-shoe-prints' }
+        ];
+
+        let products = [
+            { id: 1, brandId: 'apple', name: 'iPhone 15 Pro', price: 999, category: 'Smartphone', image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=400' },
+            { id: 2, brandId: 'apple', name: 'MacBook Air M2', price: 1199, category: 'Laptop', image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=400' },
+            { id: 3, brandId: 'nike', name: 'Air Jordan 1 Low', price: 140, category: 'Footwear', image: 'https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&q=80&w=400' },
+            { id: 4, brandId: 'samsung', name: 'Galaxy S24 Ultra', price: 1299, category: 'Smartphone', image: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&q=80&w=400' },
+            { id: 5, brandId: 'sony', name: 'PlayStation 5', price: 499, category: 'Gaming', image: 'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&q=80&w=400' }
+        ];
+
+        let activeBrandId = 'apple';
+
+        // Load content on start
+        window.onload = () => {
+            renderSidebar();
+            renderProducts();
+        };
+
+        // Render Sidebar Brands List
+        function renderSidebar(filter = '') {
+            const container = document.getElementById('brandsContainer');
+            container.innerHTML = '';
+
+            const filteredBrands = brands.filter(b => b.name.toLowerCase().includes(filter.toLowerCase()));
+
+            filteredBrands.forEach(brand => {
+                const isActive = brand.id === activeBrandId;
+                const activeClasses = isActive 
+                    ? 'bg-indigo-600 text-white font-semibold' 
+                    : 'text-gray-400 hover:bg-gray-800 hover:text-white';
+
+                const brandBtn = document.createElement('button');
+                brandBtn.className = `w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm transition-colors ${activeClasses}`;
+                brandBtn.onclick = () => selectBrand(brand.id);
+                
+                brandBtn.innerHTML = `
+                    <i class="fa-solid ${brand.logo} w-5 text-center"></i>
+                    <span class="flex-1 text-left">${brand.name}</span>
+                    <span class="text-xs px-2 py-0.5 rounded-full ${isActive ? 'bg-indigo-700 text-white' : 'bg-gray-800 text-gray-400'}">
+                        ${products.filter(p => p.brandId === brand.id).length}
+                    </span>
+                `;
+                container.appendChild(brandBtn);
+            });
+        }
+
+        // Handle Selecting a Brand
+        function selectBrand(brandId) {
+            activeBrandId = brandId;
+            renderSidebar();
+            renderProducts();
+        }
+
+        // Render Products Grid for Active Brand
+        function renderProducts() {
+            const currentBrand = brands.find(b => b.id === activeBrandId);
+            document.getElementById('currentBrandName').innerText = `${currentBrand.name} Products`;
+
+            const grid = document.getElementById('productsGrid');
+            const emptyState = document.getElementById('emptyState');
+            grid.innerHTML = '';
+
+            const filteredProducts = products.filter(p => p.brandId === activeBrandId);
+
+            if (filteredProducts.length === 0) {
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+            } else {
+                grid.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+
+                filteredProducts.forEach(product => {
+                    const card = document.createElement('div');
+                    card.className = "bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition flex flex-col";
+                    card.innerHTML = `
+                        <div class="h-48 overflow-hidden bg-gray-100">
+                            <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-4 flex-1 flex flex-col justify-between">
+                            <div>
+                                <span class="text-xs font-bold text-indigo-600 tracking-wide uppercase">${product.category}</span>
+                                <h4 class="font-bold text-gray-800 text-base mt-1">${product.name}</h4>
+                            </div>
+                            <div class="mt-4 flex justify-between items-center border-t border-gray-100 pt-3">
+                                <span class="text-lg font-extrabold text-gray-900">$${product.price}</span>
+                                <button onclick="deleteProduct(${product.id})" class="text-red-500 hover:text-red-700 text-xs font-semibold">
+                                    <i class="fa-solid fa-trash mr-1"></i>Delete
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+        }
+
+        // Filter sidebar search
+        function filterBrands() {
+            const val = document.getElementById('searchBrand').value;
+            renderSidebar(val);
+        }
+
+        // Modal Controllers
+        function openModal() {
+            const currentBrand = brands.find(b => b.id === activeBrandId);
+            document.getElementById('modalBrandDisplay').value = currentBrand.name;
+            document.getElementById('productModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('productModal').classList.add('hidden');
+            document.getElementById('productForm').reset();
+        }
+
+        // Add Product Form Handler
+        function handleAddProduct(event) {
+            event.preventDefault();
+
+            const newProduct = {
+                id: Date.now(),
+                brandId: activeBrandId,
+                name: document.getElementById('prodName').value,
+                price: parseFloat(document.getElementById('prodPrice').value),
+                category: document.getElementById('prodCategory').value,
+                image: document.getElementById('prodImage').value
+            };
+
+            products.push(newProduct);
+            closeModal();
+            renderSidebar();
+            renderProducts();
+        }
+
+        // Delete Product Handler
+        function deleteProduct(productId) {
+            if (confirm("Are you sure you want to delete this product?")) {
+                products = products.filter(p => p.id !== productId);
+                renderSidebar();
+                renderProducts();
+            }
+        }
+    </script>
+</body>
+</html>
