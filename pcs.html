@@ -393,12 +393,12 @@ function submitWhatsAppOrder() {
         let itemsText = cart.map(item => `• ${item.name} (Qty: ${item.quantity}) - $${item.price * item.quantity}`).join("%0A");
         let total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-        // ग्राहकको WhatsApp नम्बर (9852081638) समेत मसेजमा देखिने गरी मिलाइएको
-        let whatsappMessage = `*New Order Placed*%0A%0A*Name:* ${name}%0A*Customer WhatsApp / Phone:* ${phone} (%0A*Alt WhatsApp ID:* 9852081638)%0A*Address:* ${address}%0A%0A*Order Items:*%0A${itemsText}%0A%0A*Total:* $${total}`;
+        let whatsappMessage = `*New Order Placed*%0A%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Address:* ${address}%0A%0A*Order Items:*%0A${itemsText}%0A%0A*Total:* $${total}`;
         
-        // Seller को WhatsApp नम्बरमा direct मसेज पठाउने लिङ्क
         let whatsappUrl = `https://wa.me/9779801715464?text=${whatsappMessage}`;
         window.open(whatsappUrl, '_blank');
+
+        // यहाँ फर्म बन्द गर्ने फंक्शन थपिएको छ
         closeModal();
     }
     
